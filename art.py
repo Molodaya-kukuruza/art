@@ -177,8 +177,8 @@ def main():
     dp.add_handler(unknown_handler)
 
     update.start_polling()
-    update.idle()
-    #update.stop()
+    #update.idle()
+    update.stop()
 
 if __name__ == '__main__':
     main()
