@@ -78,35 +78,41 @@ def artpizda(update, context):
 
 
 def wait(update, context):
+    Remember = update
     current_user = update.effective_user
-    context.bot.send_message(chat_id=update.message.chat_id, 
-            text="Ну теперь точно все выяснили, теперь просто жди чего-нибудь", reply_to_message_id=update.message.message_id, reply_markup=ReplyKeyboardRemove(True))
-    while (True):
-        current_time = datetime.datetime.now()
-        print (current_time.hour)
-        if current_time.hour == 23:
-            url='https://horo.mail.ru/prediction/virgo/today/'
-            resp=requests.get(url) 
-            horoscope = ''
-            if resp.status_code==200:  
-                soup=BeautifulSoup(resp.text,'html.parser')     
-          
-                l=soup.find("div",{"class":"article__item article__item_alignment_left article__item_html"}) 
-               
-                for note in l:
-                    horoscope = horoscope + '\n' + (str(note)[3:-4])
-            else: 
-                print("Error") 
-                continue
-            hello = ["ВрЕмЯ гОросКОПОв", "ГАРАСКОПЧИКИ", "чо там по звездам седня?", "Меркурий то сегодня че покажет", "звезды не врут....."]
-            #context.bot.send_sticker(chat_id=update.message.chat_id, sticker = random.choice(stickers_hi))
-            context.bot.send_message(chat_id=current_user.id, 
-                text=random.choice(hello), reply_markup=ReplyKeyboardRemove(True))
+    if (update.message.text == 'Всё'):
+        context.bot.send_message(chat_id=update.message.chat_id, 
+                text="Ну теперь точно все выяснили, теперь отвали от меня и жди", reply_to_message_id=update.message.message_id, reply_markup=ReplyKeyboardRemove(True))
+        while (True):
+            if (update != Remember):
+                print ("!")
+            current_time = datetime.datetime.now()
+            if current_time.hour == 2:
+                url='https://horo.mail.ru/prediction/virgo/today/'
+                resp=requests.get(url) 
+                horoscope = ''
+                if resp.status_code==200:  
+                    soup=BeautifulSoup(resp.text,'html.parser')     
+              
+                    l=soup.find("div",{"class":"article__item article__item_alignment_left article__item_html"}) 
+                   
+                    for note in l:
+                        horoscope = horoscope + '\n' + (str(note)[3:-4])
+                else: 
+                    print("Error") 
+                    continue
+                hello = ["ВрЕмЯ гОросКОПОв", "ГАРАСКОПЧИКИ", "чо там по звездам седня?", "Меркурий то сегодня че покажет", "звезды не врут....."]
+                #context.bot.send_sticker(chat_id=update.message.chat_id, sticker = random.choice(stickers_hi))
+                context.bot.send_message(chat_id=current_user.id, 
+                    text=random.choice(hello), reply_markup=ReplyKeyboardRemove(True))
 
-            context.bot.send_sticker(chat_id=update.message.chat_id, sticker = random.choice(stickers_hi))
-            context.bot.send_message(chat_id=current_user.id, 
-                text=horoscope, reply_markup=ReplyKeyboardRemove(True))
-        time.sleep(60*32)
+                context.bot.send_sticker(chat_id=update.message.chat_id, sticker = random.choice(stickers_hi))
+                context.bot.send_message(chat_id=current_user.id, 
+                    text=horoscope, reply_markup=ReplyKeyboardRemove(True))
+            #time.sleep()
+    else:
+        context.bot.send_message(chat_id=update.message.chat_id, 
+                text="Чё? Я не понял всё или не всё", reply_to_message_id=update.message.message_id, reply_markup=ReplyKeyboardMarkup([['Всё']]))
 
 def guest(update, context):
     current_user = update.effective_user
@@ -130,7 +136,7 @@ def guest(update, context):
         except:
             print ("!") '''
     context.bot.send_message(chat_id= 708316082, 
-               text=y_text,  reply_markup=ReplyKeyboardRemove(True))
+               text=update.message.text,  reply_markup=ReplyKeyboardRemove(True))
     return GUEST
 
 def cancel(update, context):
@@ -177,8 +183,8 @@ def main():
     dp.add_handler(unknown_handler)
 
     update.start_polling()
-    #update.idle()
-    update.stop()
+    update.idle()
+    #update.stop()
 
 if __name__ == '__main__':
     main()

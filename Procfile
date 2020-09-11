@@ -1,1 +1,1 @@
-worker: python art.py
+worker: python test.py $PORT
